@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Panel del Dueño — Tu Barbería</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --charcoal: #1c1c1c;
+        --charcoal-2: #262626;
+        --charcoal-3: #2f2f2f;
+        --bone: #ede5db;
+        --bone-dim: #b9b0a2;
+        --red: #b3261e;
+        --red-bright: #d0342c;
+        --green: #4caf7d;
+        --amber: #d9a441;
+        --bg: #141414;
+        --surface: #1c1c1c;
+        --surface-2: #232323;
+        --line: #33302c;
+        --text: #ede5db;
+        --text-dim: #a89e90;
+        --chip: #2b2b2b;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #e7ded2;
+          --surface: #f4eee5;
+          --surface-2: #ede5db;
+          --line: #d5c9b8;
+          --text: #1c1c1c;
+          --text-dim: #5f574c;
+          --chip: #e3d9ca;
+          --charcoal-2: #e9e1d4;
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Barlow", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+      button { min-height: 2.25rem; font-family: inherit; cursor: pointer; }
+
+      /* ---------- Demo banner ---------- */
+      .demo-banner {
+        background: var(--red);
+        color: #fff;
+        text-align: center;
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        font-size: .8rem;
+        padding: .5rem 1rem;
+      }
+
+      /* ---------- Header ---------- */
+      header.topbar {
+        background: var(--charcoal);
+        color: var(--bone);
+        border-bottom: 3px solid var(--red);
+      }
+      @media (prefers-color-scheme: light) {
+        header.topbar { background: #1c1c1c; }
+      }
+      .topbar-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: .75rem 1.5rem;
+      }
+      .brand { display: flex; align-items: center; gap: .85rem; min-width: 0; }
+      .brand-mark {
+        width: 44px; height: 44px; flex: none;
+        border: 2px solid var(--bone);
+        display: grid; place-items: center;
+        transform: rotate(45deg);
+      }
+      .brand-mark svg { transform: rotate(-45deg); }
+      .brand h1 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1.55rem; font-weight: 700;
+        letter-spacing: .04em; text-transform: uppercase;
+        margin: 0; line-height: 1;
+      }
+      .brand p {
+        margin: .15rem 0 0;
+        font-size: .82rem; color: #c9c0b1;
+        letter-spacing: .06em; text-transform: uppercase;
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      }
+      .owner-chip {
+        display: flex; align-items: center; gap: .6rem;
+        font-size: .9rem;
+      }
+      .avatar {
+        width: 38px; height: 38px; border-radius: 50%;
+        background: var(--red); color: #fff;
+        display: grid; place-items: center;
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 700; font-size: 1rem;
+      }
+      .owner-chip small { display: block; color: #c9c0b1; font-size: .75rem; }
+      .demo-tag {
+        border: 1px solid var(--bone);
+        color: var(--bone);
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-size: .72rem; font-weight: 600;
+        letter-spacing: .16em; text-transform: uppercase;
+        padding: .3rem .6rem;
+      }
+
+      /* ---------- Layout ---------- */
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.25rem 1.25rem 3rem;
+      }
+      .toolbar {
+        display: flex; flex-wrap: wrap; align-items: center;
+        gap: .75rem 1rem; margin-bottom: 1.25rem;
+      }
+      .toolbar h2 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1.9rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: .03em;
+        margin: 0;
+      }
+      .toolbar .date-label { color: var(--text-dim); font-size: .95rem; }
+      .period-switch {
+        margin-left: auto;
+        display: flex;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        padding: 4px; gap: 4px;
+      }
+      .period-switch button {
+        border: 0; background: transparent; color: var(--text-dim);
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-weight: 600; font-size: .9rem;
+        letter-spacing: .05em; text-transform: uppercase;
+        padding: .35rem .9rem;
+      }
+      .period-switch button[aria-pressed="true"] {
+        background: var(--red); color: #fff;
+      }
+      .period-switch button:focus-visible { outline: 2px solid var(--red-bright); outline-offset: 2px; }
+
+      /* ---------- KPI cards ---------- */
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .kpi {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--red);
+        padding: 1.1rem 1.15rem 1rem;
+      }
+      .kpi-head {
+        display: flex; align-items: center; gap: .5rem;
+        color: var(--text-dim);
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-size: .82rem; font-weight: 600;
+        letter-spacing: .12em; text-transform: uppercase;
+      }
+      .kpi-head svg { flex: none; }
+      .kpi-value {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 2.5rem; font-weight: 700; line-height: 1.05;
+        margin: .45rem 0 .3rem;
+      }
+      .kpi-sub { font-size: .88rem; color: var(--text-dim); }
+      .delta { font-weight: 700; }
+      .delta.up { color: var(--green); }
+      .delta.down { color: var(--red-bright); }
+
+      /* ---------- Panels grid ---------- */
+      .grid {
+        display: grid;
+        grid-template-columns: 1.65fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+      }
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        padding: 1.15rem 1.25rem 1.25rem;
+      }
+      .panel h3 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1.3rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: .04em;
+        margin: 0 0 .25rem;
+        display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap;
+      }
+      .panel h3 .tag {
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-size: .68rem; font-weight: 600;
+        letter-spacing: .14em;
+        color: var(--red-bright);
+        border: 1px solid var(--red);
+        padding: .12rem .45rem;
+      }
+      .panel .hint { color: var(--text-dim); font-size: .88rem; margin: 0 0 1rem; }
+
+      /* ---------- Chart ---------- */
+      .chart {
+        display: flex; align-items: flex-end; gap: .6rem;
+        height: 190px;
+        border-bottom: 2px solid var(--line);
+        padding-top: .5rem;
+      }
+      .bar-col {
+        flex: 1; display: flex; flex-direction: column;
+        align-items: center; justify-content: flex-end;
+        height: 100%; min-width: 0;
+      }
+      .bar-val {
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-size: .78rem; font-weight: 600;
+        margin-bottom: .35rem; white-space: nowrap;
+      }
+      .bar {
+        width: 100%; max-width: 52px;
+        background: var(--charcoal-3);
+        background: #4a453f;
+        transition: height .5s ease;
+      }
+      @media (prefers-color-scheme: light) { .bar { background: #8a7f6e; } }
+      .bar.peak { background: var(--red); }
+      .bar-labels { display: flex; gap: .6rem; margin-top: .5rem; }
+      .bar-labels span {
+        flex: 1; text-align: center;
+        font-size: .8rem; color: var(--text-dim);
+        font-family: "Barlow Semi Condensed", sans-serif;
+        letter-spacing: .05em; text-transform: uppercase;
+        min-width: 0;
+      }
+      .chart-note { font-size: .85rem; color: var(--text-dim); margin: .8rem 0 0; }
+      .chart-note strong { color: var(--text); }
+
+      /* ---------- Barberos / ocupación ---------- */
+      .barber { padding: .85rem 0; border-bottom: 1px solid var(--line); }
+      .barber:last-child { border-bottom: 0; padding-bottom: 0; }
+      .barber:first-of-type { padding-top: .35rem; }
+      .barber-top {
+        display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap;
+      }
+      .barber-name { font-weight: 700; font-size: 1.02rem; }
+      .barber-role { color: var(--text-dim); font-size: .85rem; }
+      .barber-pct {
+        margin-left: auto;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1.35rem; font-weight: 700;
+      }
+      .meter {
+        height: 10px; background: var(--chip);
+        margin: .5rem 0 .45rem;
+        overflow: hidden;
+      }
+      .meter-fill {
+        height: 100%; background: var(--red);
+        transition: width .5s ease;
+      }
+      .meter-fill.mid { background: var(--amber); }
+      .barber-stats { font-size: .86rem; color: var(--text-dim); display: flex; gap: 1rem; flex-wrap: wrap; }
+      .barber-stats strong { color: var(--text); }
+
+      /* ---------- Próximas citas ---------- */
+      .appt {
+        display: flex; gap: .9rem; align-items: flex-start;
+        padding: .8rem 0; border-bottom: 1px solid var(--line);
+      }
+      .appt:last-child { border-bottom: 0; padding-bottom: 0; }
+      .appt-time {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1.3rem; font-weight: 700; line-height: 1;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        padding: .5rem .55rem; text-align: center; flex: none;
+        min-width: 64px;
+      }
+      .appt-time small { display: block; font-size: .68rem; letter-spacing: .1em; color: var(--text-dim); font-family: "Barlow Semi Condensed", sans-serif; margin-top: .2rem; }
+      .appt-info { flex: 1; min-width: 0; }
+      .appt-client { font-weight: 700; }
+      .appt-detail { color: var(--text-dim); font-size: .88rem; }
+      .status {
+        flex: none;
+        font-family: "Barlow Semi Condensed", sans-serif;
+        font-size: .72rem; font-weight: 600;
+        letter-spacing: .1em; text-transform: uppercase;
+        padding: .28rem .55rem;
+        border: 1px solid var(--line);
+      }
+      .status.ok { color: var(--green); border-color: var(--green); }
+      .status.wait { color: var(--amber); border-color: var(--amber); }
+      .status.done { color: var(--text-dim); }
+
+      /* ---------- Servicios ---------- */
+      .svc {
+        display: grid;
+        grid-template-columns: 2rem 1fr auto;
+        gap: .25rem .8rem;
+        align-items: baseline;
+        padding: .7rem 0; border-bottom: 1px solid var(--line);
+      }
+      .svc:last-child { border-bottom: 0; padding-bottom: 0; }
+      .svc-rank {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1.5rem; font-weight: 700; color: var(--red-bright);
+        line-height: 1;
+      }
+      .svc-name { font-weight: 600; }
+      .svc-meta { color: var(--text-dim); font-size: .85rem; grid-column: 2; }
+      .svc-rev { font-family: "Barlow Semi Condensed", sans-serif; font-weight: 700; font-size: 1.02rem; }
+      .svc-bar { grid-column: 2 / 4; height: 6px; background: var(--chip); margin-top: .3rem; }
+      .svc-bar i { display: block; height: 100%; background: var(--red); }
+
+      /* ---------- Datos extra ---------- */
+      .stat-list { list-style: none; margin: 0; padding: 0; }
+      .stat-list li {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+        padding: .62rem 0; border-bottom: 1px solid var(--line);
+        font-size: .95rem;
+      }
+      .stat-list li:last-child { border-bottom: 0; }
+      .stat-list .k { color: var(--text-dim); }
+      .stat-list .v { font-weight: 700; font-family: "Barlow Semi Condensed", sans-serif; text-align: right; }
+      .alert {
+        border: 1px solid var(--amber);
+        padding: .7rem .85rem;
+        font-size: .9rem;
+        margin-top: .9rem;
+        display: flex; gap: .6rem; align-items: flex-start;
+      }
+      .alert svg { flex: none; margin-top: .1rem; }
+      .alert strong { display: block; }
+
+      footer {
+        max-width: 1200px; margin: 0 auto;
+        padding: 0 1.25rem 2.5rem;
+        color: var(--text-dim); font-size: .85rem;
+        display: flex; flex-wrap: wrap; gap: .5rem 1.5rem;
+      }
+      footer .sep { flex: 1; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bar, .meter-fill { transition: none; }
+      }
+      @media (max-width: 900px) {
+        .kpis { grid-template-columns: repeat(2, 1fr); }
+        .grid, .grid-3 { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 480px) {
+        .kpis { grid-template-columns: 1fr 1fr; gap: .7rem; }
+        .kpi-value { font-size: 2rem; }
+        .kpi { padding: .9rem .85rem .8rem; }
+        main { padding: 1rem .9rem 2.5rem; }
+        .topbar-right { margin-left: 0; }
+        .period-switch { margin-left: 0; width: 100%; }
+        .period-switch button { flex: 1; }
+        .bar-val { font-size: .66rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-banner">Panel de demostración — Todos los datos de esta página son de ejemplo</div>
+
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ede5db" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/>
+              <path d="M8.2 7.8 20 19M8.2 16.2 20 5"/>
+            </svg>
+          </div>
+          <div>
+            <h1>Tu Barbería</h1>
+            <p>Cortes de Cabello · Panel del dueño</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span class="demo-tag">Demo</span>
+          <div class="owner-chip">
+            <span class="avatar" aria-hidden="true">D</span>
+            <span>Dueño (ejemplo)<small>Administrador</small></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="toolbar">
+        <div>
+          <h2>Resumen del negocio</h2>
+          <span class="date-label" id="dateLabel">Domingo 22 de noviembre de 2026</span>
+        </div>
+        <div class="period-switch" role="group" aria-label="Periodo">
+          <button type="button" data-period="hoy" aria-pressed="true">Hoy</button>
+          <button type="button" data-period="semana" aria-pressed="false">Semana</button>
+          <button type="button" data-period="mes" aria-pressed="false">Mes</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <section class="kpis" aria-label="Indicadores principales">
+        <article class="kpi">
+          <div class="kpi-head">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5h.01M18 14.5h.01"/></svg>
+            Ventas
+          </div>
+          <div class="kpi-value" id="kpiVentas">$4,860</div>
+          <div class="kpi-sub"><span class="delta up" id="kpiVentasDelta">+12%</span> <span id="kpiVentasRef">vs. ayer</span></div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-head">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            Citas
+          </div>
+          <div class="kpi-value" id="kpiCitas">18</div>
+          <div class="kpi-sub" id="kpiCitasSub">12 completadas · 6 por atender</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-head">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5Z"/><path d="M13 6v2M13 11v2M13 16v2" stroke-dasharray="1 3"/></svg>
+            Ticket promedio
+          </div>
+          <div class="kpi-value" id="kpiTicket">$270</div>
+          <div class="kpi-sub"><span class="delta up" id="kpiTicketDelta">+4%</span> <span id="kpiTicketRef">vs. ayer</span></div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-head">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.4"/><path d="M3.5 20c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M16 5.4a3.4 3.4 0 0 1 0 6M17.8 15.4c1.5.7 2.4 2.2 2.7 4.1"/></svg>
+            Clientes
+          </div>
+          <div class="kpi-value" id="kpiClientes">17</div>
+          <div class="kpi-sub" id="kpiClientesSub">5 nuevos · 12 recurrentes</div>
+        </article>
+      </section>
+
+      <div class="grid">
+        <!-- Ventas chart -->
+        <section class="panel" aria-label="Ventas del periodo">
+          <h3 id="chartTitle">Ventas por hora <span class="tag">Ejemplo</span></h3>
+          <p class="hint" id="chartHint">Así se movió la caja hoy, hora por hora.</p>
+          <div class="chart" id="chart" role="img" aria-label="Gráfica de barras de ventas del periodo seleccionado"></div>
+          <div class="bar-labels" id="chartLabels"></div>
+          <p class="chart-note" id="chartNote"></p>
+        </section>
+
+        <!-- Ocupación por barbero -->
+        <section class="panel" aria-label="Ocupación por barbero">
+          <h3>Ocupación por barbero <span class="tag">Ejemplo</span></h3>
+          <p class="hint" id="occHint">Agenda de hoy: citas tomadas contra lugares disponibles.</p>
+          <div id="barberList"></div>
+        </section>
+      </div>
+
+      <div class="grid">
+        <!-- Próximas citas -->
+        <section class="panel" aria-label="Próximas citas">
+          <h3>Próximas citas <span class="tag">Ejemplo</span></h3>
+          <p class="hint">Lo que sigue en la agenda de hoy, domingo 22 de noviembre.</p>
+          <div>
+            <div class="appt">
+              <div class="appt-time">16:30<small>Hoy</small></div>
+              <div class="appt-info">
+                <div class="appt-client">Carlos Méndez</div>
+                <div class="appt-detail">Corte + barba · con Diego · 60 min</div>
+              </div>
+              <span class="status ok">Confirmada</span>
+            </div>
+            <div class="appt">
+              <div class="appt-time">17:00<small>Hoy</small></div>
+              <div class="appt-info">
+                <div class="appt-client">Andrés Peña</div>
+                <div class="appt-detail">Corte clásico · con Marco · 40 min</div>
+              </div>
+              <span class="status ok">Confirmada</span>
+            </div>
+            <div class="appt">
+              <div class="appt-time">17:30<small>Hoy</small></div>
+              <div class="appt-info">
+                <div class="appt-client">Jorge Luna</div>
+                <div class="appt-detail">Diseño freestyle · con Luis · 50 min</div>
+              </div>
+              <span class="status wait">Por confirmar</span>
+            </div>
+            <div class="appt">
+              <div class="appt-time">18:00<small>Hoy</small></div>
+              <div class="appt-info">
+                <div class="appt-client">Ricardo Soto</div>
+                <div class="appt-detail">Corte + barba · con Diego · 75 min</div>
+              </div>
+              <span class="status ok">Confirmada</span>
+            </div>
+            <div class="appt">
+              <div class="appt-time">18:30<small>Hoy</small></div>
+              <div class="appt-info">
+                <div class="appt-client">Fernando Gil</div>
+                <div class="appt-detail">Arreglo de barba · con Marco · 30 min</div>
+              </div>
+              <span class="status ok">Confirmada</span>
+            </div>
+            <div class="appt">
+              <div class="appt-time">19:00<small>Hoy</small></div>
+              <div class="appt-info">
+                <div class="appt-client">Hugo Navarro</div>
+                <div class="appt-detail">Degradado · con Luis · 45 min</div>
+              </div>
+              <span class="status wait">Por confirmar</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Servicio más pedido -->
+        <section class="panel" aria-label="Servicios más pedidos">
+          <h3>Servicios más pedidos <span class="tag">Ejemplo</span></h3>
+          <p class="hint" id="svcHint">Ranking de hoy por número de servicios realizados.</p>
+          <div id="svcList"></div>
+        </section>
+      </div>
+
+      <div class="grid-3">
+        <!-- Datos del negocio -->
+        <section class="panel" aria-label="Datos del negocio">
+          <h3>El negocio en números <span class="tag">Ejemplo</span></h3>
+          <ul class="stat-list">
+            <li><span class="k">Calificación promedio</span><span class="v">4.9 / 5</span></li>
+            <li><span class="k">Reseñas totales</span><span class="v">312</span></li>
+            <li><span class="k">Hora pico</span><span class="v">17:00 – 19:00</span></li>
+            <li><span class="k">Día más fuerte</span><span class="v">Sábado</span></li>
+            <li><span class="k">Cancelaciones</span><span class="v">3.1%</span></li>
+            <li><span class="k">Clientes que regresan</span><span class="v">68%</span></li>
+            <li><span class="k">Reservas por WhatsApp</span><span class="v">74%</span></li>
+          </ul>
+        </section>
+
+        <!-- Metas -->
+        <section class="panel" aria-label="Meta del mes">
+          <h3>Meta del mes <span class="tag">Ejemplo</span></h3>
+          <p class="hint">Noviembre 2026 · meta de ventas del mes.</p>
+          <div class="barber-top">
+            <span class="barber-name">$112,750 vendidos</span>
+            <span class="barber-pct">75%</span>
+          </div>
+          <div class="meter" role="img" aria-label="Avance de la meta del mes: 75 por ciento">
+            <div class="meter-fill" style="width:75%"></div>
+          </div>
+          <ul class="stat-list">
+            <li><span class="k">Meta</span><span class="v">$150,000</span></li>
+            <li><span class="k">Faltan</span><span class="v">$37,250</span></li>
+            <li><span class="k">Días restantes</span><span class="v">8</span></li>
+            <li><span class="k">Ritmo necesario</span><span class="v">$4,657 / día</span></li>
+          </ul>
+        </section>
+
+        <!-- Inventario y avisos -->
+        <section class="panel" aria-label="Inventario y avisos">
+          <h3>Inventario y avisos <span class="tag">Ejemplo</span></h3>
+          <ul class="stat-list">
+            <li><span class="k">Cera mate</span><span class="v">2 piezas</span></li>
+            <li><span class="k">Navajas (caja)</span><span class="v">1 caja</span></li>
+            <li><span class="k">Gel fijador</span><span class="v">6 piezas</span></li>
+            <li><span class="k">Toallas limpias</span><span class="v">24</span></li>
+          </ul>
+          <div class="alert">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d9a441" stroke-width="2" stroke-linecap="round"><path d="M12 3 2.5 20h19Z"/><path d="M12 10v4M12 17.2h.01"/></svg>
+            <span><strong>Stock bajo</strong>La cera mate y las navajas se acaban esta semana. Conviene pedir el lunes.</span>
+          </div>
+          <div class="alert">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d9a441" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span><strong>2 citas por confirmar</strong>Jorge Luna (17:30) y Hugo Navarro (19:00) aún no confirman por WhatsApp.</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Tu Barbería — Cortes de Cabello · Panel del dueño</span>
+      <span class="sep"></span>
+      <span>Versión de demostración: ningún dato aquí es real, todo es de ejemplo.</span>
+    </footer>
+
+    <script>
+      var DATA = {
+        hoy: {
+          dateLabel: "Domingo 22 de noviembre de 2026",
+          ventas: "$4,860", ventasDelta: "+12%", ventasDeltaUp: true, ventasRef: "vs. ayer",
+          citas: "18", citasSub: "12 completadas · 6 por atender",
+          ticket: "$270", ticketDelta: "+4%", ticketDeltaUp: true, ticketRef: "vs. ayer",
+          clientes: "17", clientesSub: "5 nuevos · 12 recurrentes",
+          chartTitle: "Ventas por hora",
+          chartHint: "Ventas del día por hora: lo ya cobrado más las citas agendadas de la tarde.",
+          chart: [
+            { label: "10 h", value: 320 }, { label: "11 h", value: 450 },
+            { label: "12 h", value: 610 }, { label: "13 h", value: 540 },
+            { label: "14 h", value: 380 }, { label: "15 h", value: 470 },
+            { label: "16 h", value: 690 }, { label: "17 h", value: 720 },
+            { label: "18 h", value: 680 }
+          ],
+          chartNote: "La hora más fuerte del día es la de <strong>17:00 h</strong> con $720, entre lo cobrado y lo agendado.",
+          occHint: "Agenda de hoy: citas tomadas contra lugares disponibles.",
+          barbers: [
+            { name: "Diego Ramírez", role: "Barbero senior", pct: 88, citas: "7 de 8 lugares", ingreso: "$1,980" },
+            { name: "Marco Torres", role: "Barbero", pct: 75, citas: "6 de 8 lugares", ingreso: "$1,620" },
+            { name: "Luis Herrera", role: "Barbero", pct: 63, citas: "5 de 8 lugares", ingreso: "$1,260" }
+          ],
+          svcHint: "Ranking de hoy por número de servicios. El total cuadra con las ventas del día.",
+          services: [
+            { name: "Degradado (fade)", meta: "7 servicios · $250 c/u", rev: "$1,750", pct: 100 },
+            { name: "Corte + barba", meta: "4 servicios · $350 c/u", rev: "$1,400", pct: 80 },
+            { name: "Corte clásico", meta: "4 servicios · $200 c/u", rev: "$800", pct: 46 },
+            { name: "Arreglo de barba", meta: "2 servicios · $150 c/u", rev: "$300", pct: 17 },
+            { name: "Diseño freestyle", meta: "1 servicio · $400 c/u", rev: "$400", pct: 23 },
+            { name: "Productos en mostrador", meta: "Cera, gel y pomada · 2 piezas", rev: "$210", pct: 12, rank: "+" }
+          ]
+        },
+        semana: {
+          dateLabel: "Semana del 16 al 22 de noviembre de 2026",
+          ventas: "$28,340", ventasDelta: "+8%", ventasDeltaUp: true, ventasRef: "vs. semana pasada",
+          citas: "104", citasSub: "98 completadas · 6 canceladas o movidas",
+          ticket: "$272", ticketDelta: "+2%", ticketDeltaUp: true, ticketRef: "vs. semana pasada",
+          clientes: "89", clientesSub: "21 nuevos · 68 recurrentes",
+          chartTitle: "Ventas por día",
+          chartHint: "Ventas de lunes a domingo de esta semana.",
+          chart: [
+            { label: "Lun", value: 2900 }, { label: "Mar", value: 3150 },
+            { label: "Mié", value: 3540 }, { label: "Jue", value: 3980 },
+            { label: "Vie", value: 5120 }, { label: "Sáb", value: 6250 },
+            { label: "Dom", value: 3400 }
+          ],
+          chartNote: "El mejor día fue el <strong>sábado</strong> con $6,250. El fin de semana suma el 34% de las ventas de la semana.",
+          occHint: "Ocupación de la semana: citas tomadas contra lugares disponibles.",
+          barbers: [
+            { name: "Diego Ramírez", role: "Barbero senior", pct: 88, citas: "37 de 42 lugares", ingreso: "$10,240" },
+            { name: "Marco Torres", role: "Barbero", pct: 83, citas: "35 de 42 lugares", ingreso: "$9,480" },
+            { name: "Luis Herrera", role: "Barbero", pct: 76, citas: "32 de 42 lugares", ingreso: "$8,620" }
+          ],
+          svcHint: "Ranking de la semana por número de servicios. El total cuadra con las ventas de la semana.",
+          services: [
+            { name: "Degradado (fade)", meta: "38 servicios · $250 c/u", rev: "$9,500", pct: 100 },
+            { name: "Corte + barba", meta: "24 servicios · $350 c/u", rev: "$8,400", pct: 88 },
+            { name: "Corte clásico", meta: "22 servicios · $200 c/u", rev: "$4,400", pct: 46 },
+            { name: "Arreglo de barba", meta: "13 servicios · $150 c/u", rev: "$1,950", pct: 21 },
+            { name: "Diseño freestyle", meta: "7 servicios · $400 c/u", rev: "$2,800", pct: 29 },
+            { name: "Productos en mostrador", meta: "Cera, gel y pomada", rev: "$1,290", pct: 14, rank: "+" }
+          ]
+        },
+        mes: {
+          dateLabel: "Noviembre de 2026 (al día 22)",
+          ventas: "$112,750", ventasDelta: "+15%", ventasDeltaUp: true, ventasRef: "vs. octubre",
+          citas: "412", citasSub: "396 completadas · 16 canceladas o movidas",
+          ticket: "$274", ticketDelta: "+5%", ticketDeltaUp: true, ticketRef: "vs. octubre",
+          clientes: "340", clientesSub: "78 nuevos · 262 recurrentes",
+          chartTitle: "Ventas por semana",
+          chartHint: "Ventas de cada semana de noviembre.",
+          chart: [
+            { label: "Sem 1", value: 25480 }, { label: "Sem 2", value: 27120 },
+            { label: "Sem 3", value: 28340 }, { label: "Sem 4*", value: 31810 }
+          ],
+          chartNote: "*Semana 4 en curso. El mes va <strong>15% arriba</strong> contra octubre al mismo día.",
+          occHint: "Ocupación del mes: citas tomadas contra lugares disponibles.",
+          barbers: [
+            { name: "Diego Ramírez", role: "Barbero senior", pct: 93, citas: "148 de 160 lugares", ingreso: "$42,300" },
+            { name: "Marco Torres", role: "Barbero", pct: 87, citas: "139 de 160 lugares", ingreso: "$37,850" },
+            { name: "Luis Herrera", role: "Barbero", pct: 78, citas: "125 de 160 lugares", ingreso: "$32,600" }
+          ],
+          svcHint: "Ranking del mes por número de servicios. El total cuadra con las ventas del mes.",
+          services: [
+            { name: "Degradado (fade)", meta: "148 servicios · $250 c/u", rev: "$37,000", pct: 100 },
+            { name: "Corte + barba", meta: "96 servicios · $350 c/u", rev: "$33,600", pct: 91 },
+            { name: "Corte clásico", meta: "88 servicios · $200 c/u", rev: "$17,600", pct: 48 },
+            { name: "Arreglo de barba", meta: "52 servicios · $150 c/u", rev: "$7,800", pct: 21 },
+            { name: "Diseño freestyle", meta: "28 servicios · $400 c/u", rev: "$11,200", pct: 30 },
+            { name: "Productos en mostrador", meta: "Cera, gel y pomada", rev: "$5,550", pct: 15, rank: "+" }
+          ]
+        }
+      };
+
+      function money(n) {
+        return "$" + n.toLocaleString("es-MX");
+      }
+
+      function render(period) {
+        var d = DATA[period];
+        document.getElementById("dateLabel").textContent = d.dateLabel;
+        document.getElementById("kpiVentas").textContent = d.ventas;
+        var vd = document.getElementById("kpiVentasDelta");
+        vd.textContent = d.ventasDelta;
+        vd.className = "delta " + (d.ventasDeltaUp ? "up" : "down");
+        document.getElementById("kpiVentasRef").textContent = d.ventasRef;
+        document.getElementById("kpiCitas").textContent = d.citas;
+        document.getElementById("kpiCitasSub").textContent = d.citasSub;
+        document.getElementById("kpiTicket").textContent = d.ticket;
+        var td = document.getElementById("kpiTicketDelta");
+        td.textContent = d.ticketDelta;
+        td.className = "delta " + (d.ticketDeltaUp ? "up" : "down");
+        document.getElementById("kpiTicketRef").textContent = d.ticketRef;
+        document.getElementById("kpiClientes").textContent = d.clientes;
+        document.getElementById("kpiClientesSub").textContent = d.clientesSub;
+
+        /* Chart */
+        document.getElementById("chartTitle").firstChild.textContent = d.chartTitle + " ";
+        document.getElementById("chartHint").textContent = d.chartHint;
+        var chart = document.getElementById("chart");
+        var labels = document.getElementById("chartLabels");
+        chart.innerHTML = "";
+        labels.innerHTML = "";
+        var max = 0, peakIdx = 0;
+        d.chart.forEach(function (c, i) { if (c.value > max) { max = c.value; peakIdx = i; } });
+        d.chart.forEach(function (c, i) {
+          var col = document.createElement("div");
+          col.className = "bar-col";
+          var val = document.createElement("div");
+          val.className = "bar-val";
+          val.textContent = money(c.value);
+          var bar = document.createElement("div");
+          bar.className = "bar" + (i === peakIdx ? " peak" : "");
+          bar.style.height = Math.max(6, Math.round((c.value / max) * 78)) + "%";
+          col.appendChild(val);
+          col.appendChild(bar);
+          chart.appendChild(col);
+          var lab = document.createElement("span");
+          lab.textContent = c.label;
+          labels.appendChild(lab);
+        });
+        document.getElementById("chartNote").innerHTML = d.chartNote;
+
+        /* Barberos */
+        document.getElementById("occHint").textContent = d.occHint;
+        var bl = document.getElementById("barberList");
+        bl.innerHTML = "";
+        d.barbers.forEach(function (b) {
+          var wrap = document.createElement("div");
+          wrap.className = "barber";
+          var top = document.createElement("div");
+          top.className = "barber-top";
+          top.innerHTML = '<span class="barber-name"></span><span class="barber-role"></span><span class="barber-pct"></span>';
+          top.querySelector(".barber-name").textContent = b.name;
+          top.querySelector(".barber-role").textContent = b.role;
+          top.querySelector(".barber-pct").textContent = b.pct + "%";
+          var meter = document.createElement("div");
+          meter.className = "meter";
+          meter.setAttribute("role", "img");
+          meter.setAttribute("aria-label", "Ocupación de " + b.name + ": " + b.pct + " por ciento");
+          var fill = document.createElement("div");
+          fill.className = "meter-fill" + (b.pct < 80 ? " mid" : "");
+          fill.style.width = b.pct + "%";
+          meter.appendChild(fill);
+          var stats = document.createElement("div");
+          stats.className = "barber-stats";
+          stats.innerHTML = "<span></span><span>Ingresos: <strong></strong></span>";
+          stats.querySelector("span").textContent = b.citas;
+          stats.querySelector("strong").textContent = b.ingreso;
+          wrap.appendChild(top);
+          wrap.appendChild(meter);
+          wrap.appendChild(stats);
+          bl.appendChild(wrap);
+        });
+
+        /* Servicios */
+        document.getElementById("svcHint").textContent = d.svcHint;
+        var sl = document.getElementById("svcList");
+        sl.innerHTML = "";
+        d.services.forEach(function (s, i) {
+          var row = document.createElement("div");
+          row.className = "svc";
+          var rank = document.createElement("span");
+          rank.className = "svc-rank";
+          rank.textContent = s.rank ? s.rank : (i + 1);
+          var name = document.createElement("span");
+          name.className = "svc-name";
+          name.textContent = s.name;
+          var rev = document.createElement("span");
+          rev.className = "svc-rev";
+          rev.textContent = s.rev;
+          var meta = document.createElement("span");
+          meta.className = "svc-meta";
+          meta.textContent = s.meta;
+          var barWrap = document.createElement("span");
+          barWrap.className = "svc-bar";
+          var barFill = document.createElement("i");
+          barFill.style.width = s.pct + "%";
+          barWrap.appendChild(barFill);
+          row.appendChild(rank);
+          row.appendChild(name);
+          row.appendChild(rev);
+          row.appendChild(meta);
+          row.appendChild(barWrap);
+          sl.appendChild(row);
+        });
+      }
+
+      var buttons = document.querySelectorAll(".period-switch button");
+      buttons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          buttons.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+          btn.setAttribute("aria-pressed", "true");
+          render(btn.getAttribute("data-period"));
+        });
+      });
+
+      render("hoy");
+    </script>
+  </body>
+</html>
